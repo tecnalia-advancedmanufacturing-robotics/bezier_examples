@@ -15,10 +15,10 @@
 #include <bezier/grinding_surfacing.hpp>
 
 /** Name of the move_group used to move the robot */
-const std::string move_group_name("manipulator");
+const std::string move_group_name("manipulator_tcp");
 
 /** Name of the TCP that should be used to compute the trajectories */
-const std::string tcp_name("/tool0");
+const std::string tcp_name("/tcp_frame");
 
 /** @brief The main function
  * @param[in] argc
@@ -133,9 +133,9 @@ int main(int argc,
   // Initialize move group
   moveit::planning_interface::MoveGroupInterface group(move_group_name);
   group.setPoseReferenceFrame("base_link");
-  group.setPlannerId("RRTConnectkConfigDefault");
-  //group.setPlannerId("RRTstarkConfigDefault");
-  group.setPlanningTime(10);
+  //group.setPlannerId("RRTConnectkConfigDefault");
+  group.setPlannerId("RRTstarkConfigDefault");
+  group.setPlanningTime(2);
 
   // Execute robot trajectory
   moveit::planning_interface::MoveGroupInterface::Plan plan;
@@ -149,6 +149,10 @@ int main(int argc,
     {
       ROS_ERROR_STREAM("Path planning failed");
       return 1;
+    }
+    else
+    {
+      ROS_INFO_STREAM("Cartesian plan covering " << result * 100 << "\% of the trajectory");
     }
 
     if (!group.execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
@@ -168,6 +172,10 @@ int main(int argc,
     {
       ROS_ERROR_STREAM("Path planning failed");
       return 1;
+    }
+    else
+    {
+      ROS_INFO_STREAM("Cartesian plan covering " << result * 100 << "\% of the trajectory");
     }
 
     if (!group.execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS)

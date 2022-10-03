@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(bezier_examples)
 add_compile_options(-Wall -Wextra)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ## Find catkin macros and libraries
@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   bezier
   fanuc_m10ia_moveit_config_melodic
   fanuc_m10ia_support
+  eigen_conversions
   moveit_ros_planning_interface
   roscpp
   roslaunch
@@ -31,6 +32,7 @@ catkin_package(
   bezier
   fanuc_m10ia_moveit_config_melodic
   fanuc_m10ia_support
+  eigen_conversions
   moveit_ros_planning_interface
   roscpp
   roslaunch
@@ -55,6 +57,16 @@ add_executable(
 )
 target_link_libraries(
   ${PROJECT_NAME}_surfacing
+  ${catkin_LIBRARIES}
+)
+
+# Surfacing example
+add_executable(
+  ${PROJECT_NAME}_surfacing_fegescan
+  src/surfacing_fegescan.cpp
+)
+target_link_libraries(
+  ${PROJECT_NAME}_surfacing_fegescan
   ${catkin_LIBRARIES}
 )
 

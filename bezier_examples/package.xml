@@ -12,6 +12,7 @@
   <depend>bezier</depend>
   <depend>fanuc_m10ia_moveit_config_melodic</depend>
   <depend>fanuc_m10ia_support</depend>
+  <depend>eigen_conversions</depend>
   <depend>moveit_ros_planning_interface</depend>
   <depend>roscpp</depend>
   <depend>roslaunch</depend>
