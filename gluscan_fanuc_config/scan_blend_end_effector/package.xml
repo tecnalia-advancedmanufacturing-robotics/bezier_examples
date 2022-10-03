@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>scan_blend_end_effector</name>
+  <version>0.1.0</version>
+  <description>
+    URDF robot description model for the blending end effector with a Zivid camera and QuellTech laser sensor
+  </description>
+
+  <maintainer email="hector.herrero@tecnalia.com">Héctor Herrero</maintainer>
+
+  <license>TRI</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>industrial_robot_client</exec_depend>
+
+</package>

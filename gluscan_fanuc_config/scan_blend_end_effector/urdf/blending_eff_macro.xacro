@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="zivid_optical_x" value="0.069"/>
+  <xacro:property name="zivid_optical_y" value="0.0615"/>
+  <xacro:property name="zivid_optical_z" value="0.105"/>
+
+  <xacro:property name="quelltech_optical_x" value="0.0136617790664"/>
+  <xacro:property name="quelltech_optical_y" value="0.175341077"/> <!-- Standoff: 0.053-->
+  <xacro:property name="quelltech_optical_z" value="0.188200037908"/>
+
+  <xacro:property name="quelltech_tcp_x" value="0.024"/>
+  <xacro:property name="quelltech_tcp_y" value="0.0"/>
+  <xacro:property name="quelltech_tcp_z" value="0.025"/>
+
+  <xacro:property name="blend_tcp_x" value="0"/>
+  <xacro:property name="blend_tcp_y" value="0"/>
+  <xacro:property name="blend_tcp_z" value="-0.006"/> <!-- TBD -->
+
+  <xacro:property name="chuck_tcp_x" value="-0.2208199"/>
+  <xacro:property name="chuck_tcp_y" value="0.0833815"/>
+  <xacro:property name="chuck_tcp_z" value="0.0488667"/>
+  <xacro:property name="chuck_tcp_r" value="0.212045287"/>
+  <xacro:property name="chuck_tcp_p" value="-1.528072412"/>
+  <xacro:property name="chuck_tcp_w" value="-0.55945831"/>
+
+  <xacro:property name="half_pi" value="1.5707963267948966"/>
+  <!-- <xacro:property name="pi" value="3.141592"/> -->
+
+
+  <xacro:macro name="blending_eff_definition" params="prefix">
+    <link name="${prefix}robot_flange"/>
+    <joint name="${prefix}ros_flange_to_robot_flange" type="fixed">
+        <parent link="${prefix}flange"/>
+        <child link="${prefix}robot_flange"/>
+        <origin xyz="0 0 0" rpy="${pi} ${-half_pi} 0"/>
+    </joint>
+
+    <!-- eff_frame is Base Link -->
+    <link name="${prefix}eff_frame"/>
+
+    <link name="${prefix}zivid_asamblaje_v3">
+      <visual>
+        <geometry>
+          <mesh filename="package://scan_blend_end_effector/meshes/visual/zivid_ensamblaje_v3.STL"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://scan_blend_end_effector/meshes/visual/zivid_ensamblaje_v3.STL"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}eff_frame_to_zivid_asamblaje_v3" type="fixed">
+        <parent link="${prefix}eff_frame"/>
+        <child link="${prefix}zivid_asamblaje_v3"/>
+        <origin xyz="0 0 0.0" rpy="0 0 ${half_pi-2*0.18}"/>
+    </joint>
+
+    <!-- Frames for the motorized spindle on the end-->
+    <link name="${prefix}chuck_tip_frame"/> <!--The tip of the chuck-->
+    <link name="${prefix}tcp_frame"/> <!--The actual 'useful' work frame-->
+
+    <joint name="${prefix}eff_frame_to_chuck" type="fixed">
+        <parent link="${prefix}robot_flange"/>
+        <child link="${prefix}chuck_tip_frame"/>
+        <origin xyz="${chuck_tcp_x} ${chuck_tcp_y} ${chuck_tcp_z}" rpy="${chuck_tcp_r} ${chuck_tcp_p} ${chuck_tcp_w}"/>
+    </joint>
+
+    <joint name="${prefix}chuck_to_blend_tcp_frame" type="fixed">
+        <parent link="${prefix}chuck_tip_frame"/>
+        <child link="${prefix}tcp_frame"/>
+        <origin xyz="${blend_tcp_x} ${blend_tcp_y} ${blend_tcp_z}" rpy="0 0 0"/>
+    </joint>
+
+    <!--Frames for the quelltech profilometer-->
+    <link name="${prefix}quelltech_sensor_optical_frame"/>  <!--The emitter lens-->
+    <link name="${prefix}quelltech_tcp_frame"/> <!--The nominal scan location (8cm forward of emitter)-->
+
+    <joint name="${prefix}eff_frame_to_quelltech_sof" type="fixed">
+        <parent link="${prefix}zivid_asamblaje_v3"/>
+        <child link="${prefix}quelltech_sensor_optical_frame"/>
+        <origin xyz="${quelltech_optical_x} ${quelltech_optical_y} ${quelltech_optical_z}" rpy="-${half_pi} ${half_pi} 0"/>
+    </joint>
+
+    <joint name="${prefix}eff_frame_to_quelltech_tcp_f" type="fixed">
+        <parent link="${prefix}quelltech_sensor_optical_frame"/>
+        <child link="${prefix}quelltech_tcp_frame"/>
+        <origin xyz="${quelltech_tcp_x} ${quelltech_tcp_y} ${quelltech_tcp_z}" rpy="0 0 ${pi}"/>
+    </joint>
+
+    <!--Frames related to the motion of the camera-->
+    <link name="${prefix}zivid_optical_frame"/>
+    <link name="${prefix}zivid_move_frame"/>
+
+  <!-- ZividExperimentalHandEyeCalibration-->
+<!--     <joint name="${prefix}eff_frame_to_zivid_sof" type="fixed">
+        <parent link="${prefix}tool0"/>
+        <child link="${prefix}zivid_optical_frame"/>
+        <origin xyz="0.046341869 -0.062114287 0.103942043" rpy="-1.5520697 0.0133265 2.6017876"/>
+    </joint> -->
+
+  <!-- ZividExperimentalHandEyeCalibration 23-06 -->
+<!--     <joint name="${prefix}eff_frame_to_zivid_sof" type="fixed">
+        <parent link="${prefix}tool0"/>
+        <child link="${prefix}zivid_optical_frame"/>
+        <origin xyz="0.046064037 -0.062671066 0.103930794" rpy="-1.5989825 0.2747678 2.8590717"/>
+    </joint> -->
+  <!-- ZividExperimentalHandEyeCalibration 21-07 -->
+<!--     <joint name="${prefix}eff_frame_to_zivid_sof" type="fixed">
+        <parent link="${prefix}tool0"/>
+        <child link="${prefix}zivid_optical_frame"/>
+        <origin xyz="0.046039345 -0.062932808 0.103080086" rpy="-1.5986853 0.2736759 2.8569345"/>
+    </joint> -->
+
+
+
+  <!-- ZividExperimentalHandEyeCalibration without capture 01 + magical offset  (working)-->
+    <joint name="${prefix}eff_frame_to_zivid_sof" type="fixed">
+        <parent link="${prefix}tool0"/>
+        <child link="${prefix}zivid_optical_frame"/>
+        <origin xyz="0.046341869 -0.062114287 0.061942043" rpy="-1.5120697 0.0133265 2.6017876"/>
+    </joint>
+
+
+
+
+    <joint name="${prefix}zivid_move_frame_join" type="fixed">
+      <parent link="${prefix}zivid_optical_frame"/>
+      <child link="${prefix}zivid_move_frame"/>
+      <origin rpy="${half_pi} -${half_pi} 0"/>
+    </joint>
+
+  </xacro:macro>
+</robot>

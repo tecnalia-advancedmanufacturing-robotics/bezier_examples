@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<robot name="cr7ial_workspace" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find fanuc_cr7ia_support)/urdf/cr7ial_macro.xacro"/>
+
+  <link name="world_frame"/>
+
+  <!-- instantiating arm  -->
+  <xacro:fanuc_cr7ial prefix=""/>
+
+  <!-- start of arm-workcell joint definitions -->
+  <joint name="world_to_base" type="fixed">
+    <parent link="world_frame"/>
+    <child link="base_link"/>
+    <origin xyz="0.0 0 0.03" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:include filename="$(find scan_blend_end_effector)/urdf/blending_eff_macro.xacro"/>
+
+  <!-- instantiate end effector -->
+  <xacro:blending_eff_definition prefix=""/>
+
+  <joint name="robot_flange_to_eff" type="fixed">
+    <parent link="tool0"/>
+    <child link="eff_frame"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi}"/>
+  </joint>
+
+</robot>

@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: gluscan_cr7ial_workspace_support
+    relative_path: urdf/cr7ial_workspace.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/cr7ial_workspace.srdf
+  CONFIG:
+    author_name: Andres Montano
+    author_email: andres.montano@tecnalia.com
+    generated_timestamp: 1639387080
